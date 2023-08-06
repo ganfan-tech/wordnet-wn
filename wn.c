@@ -210,35 +210,41 @@ struct
     {"-over", "-over\t", "\t\tOverview of Senses"},
 };
 
+// 函数声明
 static int getoptidx(char *), cmdopt(char *);
 static int searchwn(int, char *[]);
 static int do_search(char *, int, int, int, char *);
 static int do_is_defined(char *);
-static void printusage(), printlicense(),
-    printsearches(char *, int, unsigned long);
+static void printusage(), printlicense(), printsearches(char *, int, unsigned long);
 static int error_message(char *);
 
 int main(int argc, char *argv[])
 {
   display_message = error_message;
 
+  // 参数数量，如果只有一个，则为只输入程序名，输出使用说明
   if (argc < 2)
   {
     printusage();
     exit(-1);
   }
+
+  // 第二个参数是-l，打印license
   else if (argc == 2 && !strcmp("-l", argv[1]))
   {
     printlicense();
     exit(-1);
   }
 
+  // 初始化数据，判断初始化结果，
+  // C语言规范，返回0则为成功，非0为出错
   if (wninit())
   { /* open database */
     display_message("wn: Fatal error - cannot open WordNet database\n");
     exit(-1);
   }
 
+  // 执行搜索，然后退出
   exit(searchwn(argc, argv));
 }
 
@@ -455,76 +461,3 @@ static int error_message(char *msg)
   fprintf(stderr, msg);
   return (0);
 }
-
-/*
-  Revision log: (since version 1.5)
-
-  $Log: wn.c,v $
-  Revision 1.13  2005/01/31 19:19:09  wn
-  removed include for license.h
-
-  Revision 1.12  2005/01/27 17:32:37  wn
-  removed wnhelp.h
-
-  Revision 1.11  2004/10/25 16:34:43  wn
-  removed 1.6 references
-
-  Revision 1.10  2003/07/15 16:50:53  wn
-  added domain and domain term searches
-
-  Revision 1.9  2003/07/15 15:53:05  wn
-  updated search numbers
-
-  Revision 1.8  2002/03/07 17:52:49  wn
-  fixes for 1.7.1
-
-  Revision 1.7  2001/11/06 18:51:59  wn
-  added CLASSIFICATION placeholders
-
-  Revision 1.6  2001/10/25 16:56:11  wn
-  changed text on synsnym searches to say 'estimated frequency'
-
-  Revision 1.5  2001/07/20 18:15:10  wn
-  changed Nominalizations to Derived Forms
-
-  Revision 1.4  2001/06/19 15:06:17  wn
-  changed search from long to int
-
-  Revision 1.3  2001/03/30 17:16:05  wn
-  cleanups for 1.7
-
-  Revision 1.2  2000/10/30 19:06:49  wn
-  added code to handle nominalizations
-
-  Revision 1.1  1998/05/06 18:22:57  wn
-  Initial revision
-
- * Revision 1.58  1997/11/21  19:01:17  wn
- * added simsv search
- *
- * Revision 1.57  1997/09/02  17:10:32  wn
- * changed includes
- *
- * Revision 1.56  1997/08/29  18:43:37  wn
- * rearranged functions
- *
- * Revision 1.55  1997/08/29  16:44:24  wn
- * added code to exit with total senses printed
- *
- * Revision 1.54  1997/08/26  20:29:38  wn
- * added -s option, reorganized code
- *
- * Revision 1.53  1997/08/08  19:19:03  wn
- * major cleanup
- *
- * Revision 1.52  1997/08/05  20:15:31  wn
- * removed WNDEBUG, cleanups
- *
- * Revision 1.51  1995/06/30  19:25:02  wn
- * access first element of OutSenseCount array
- *
-  *
-  * Revision 1.1  91/09/17  15:51:09  wn
-  * Initial revision
-  *
-  */
