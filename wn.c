@@ -211,6 +211,7 @@ struct
 };
 
 // 函数声明
+
 static int getoptidx(char *), cmdopt(char *);
 static int searchwn(int, char *[]);
 static int do_search(char *, int, int, int, char *);
@@ -250,6 +251,10 @@ int main(int argc, char *argv[])
 
 static int searchwn(int ac, char *av[])
 {
+  // 参数分两类
+  // 一类是选项 options，选项是对于搜索过程、展示结果的控制，比如搜索哪些释义、是否展示注释等
+  // 另一类是搜索类型 search type，查的是名词还是动词等等
+
   int i, j = 1, pos;
   int whichsense = ALLSENSES, help = 0;
   int errcount = 0, outsenses = 0;
@@ -263,6 +268,7 @@ static int searchwn(int ac, char *av[])
   dflag = fileinfoflag = offsetflag = wnsnsflag = 0;
 
   // 遍历每一个参数，解析其含义，因为参数的顺序是随机的，所以二重循环
+  // 在一个循环里有好多if else 判断，相当于二重循环了
   for (i = 1; i < ac; i++)
   {
     if (!strcmp("-g", av[i]))
@@ -275,7 +281,7 @@ static int searchwn(int ac, char *av[])
       printlicense();
     else if (!strncmp("-n", av[i], 2) && strncmp("-nomn", av[i], 5))
       // 只显示某个意思
-      whichsense = atoi(av[i] + 2); 
+      whichsense = atoi(av[i] + 2);
     else if (!strcmp("-a", av[i]))
       // 显示文件信息
       fileinfoflag = 1;
@@ -298,30 +304,31 @@ static int searchwn(int ac, char *av[])
 
   while (av[++j])
   {
-    if (!cmdopt(av[j]))
-    { /* not a command line option */
-      if ((i = getoptidx(av[j])) != -1)
-      {
-        optptr = &optlist[i];
+    if (cmdopt(av[j]))
+      // a command line option
+      continue;
 
-        /* print help text before search output */
-        if (help && optptr->helpmsgidx >= 0)
-          printf("%s\n", helptext[optptr->pos][optptr->helpmsgidx]);
+    if ((i = getoptidx(av[j])) != -1)
+    {
+      optptr = &optlist[i];
 
-        if (optptr->pos == ALL_POS)
-          for (pos = 1; pos <= NUMPARTS; pos++)
-            outsenses += do_search(av[1], pos, optptr->search,
-                                   whichsense, optptr->label);
-        else
-          outsenses += do_search(av[1], optptr->pos, optptr->search,
+      /* print help text before search output */
+      if (help && optptr->helpmsgidx >= 0)
+        printf("%s\n", helptext[optptr->pos][optptr->helpmsgidx]);
+
+      if (optptr->pos == ALL_POS)
+        for (pos = 1; pos <= NUMPARTS; pos++)
+          outsenses += do_search(av[1], pos, optptr->search,
                                  whichsense, optptr->label);
-      }
       else
-      {
-        sprintf(tmpbuf, "wn: invalid search option: %s\n", av[j]);
-        display_message(tmpbuf);
-        errcount++;
-      }
+        outsenses += do_search(av[1], optptr->pos, optptr->search,
+                               whichsense, optptr->label);
+    }
+    else
+    {
+      sprintf(tmpbuf, "wn: invalid search option: %s\n", av[j]);
+      display_message(tmpbuf);
+      errcount++;
     }
   }
   return (errcount ? -errcount : outsenses);
