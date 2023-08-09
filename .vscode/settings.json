@@ -5,6 +5,7 @@
     "*.wxs": "javascript",
     "assert.h": "c",
     "wn.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "cstring": "c"
   }
 }

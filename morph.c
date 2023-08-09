@@ -143,9 +143,7 @@ static int do_init(void)
     sprintf(fname, EXCFILE, searchdir, partnames[i]);
     if ((exc_fps[i] = fopen(fname, "r")) == NULL)
     {
-      sprintf(msgbuf,
-              "WordNet library error: Can't open exception file(%s)\n\n",
-              fname);
+      sprintf(msgbuf, "WordNet library error: Can't open exception file(%s)\n\n", fname);
       display_message(msgbuf);
       openerr = -1;
     }

@@ -43,6 +43,7 @@ int wninit(void)
     {
       done = 1;
       OpenDB = 1;
+      // 读取.exc文件
       openerr = morphinit();
     }
   }
@@ -118,6 +119,7 @@ static void closefps(void)
 
 static int do_init(void)
 {
+  // 读取N个文件
   int i, openerr;
   char searchdir[256], tmpbuf[256];
   char *env;
@@ -176,18 +178,14 @@ static int do_init(void)
   sprintf(tmpbuf, VRBSENTFILE, searchdir);
   if ((vsentfilefp = fopen(tmpbuf, "r")) == NULL)
   {
-    sprintf(msgbuf,
-            "WordNet library warning: Can't open verb example sentence file(%s)\n",
-            tmpbuf);
+    sprintf(msgbuf, "WordNet library warning: Can't open verb example sentence file(%s)\n", tmpbuf);
     display_message(msgbuf);
   }
 
   sprintf(tmpbuf, VRBIDXFILE, searchdir);
   if ((vidxfilefp = fopen(tmpbuf, "r")) == NULL)
   {
-    sprintf(msgbuf,
-            "WordNet library warning: Can't open verb example sentence index file(%s)\n",
-            tmpbuf);
+    sprintf(msgbuf, "WordNet library warning: Can't open verb example sentence index file(%s)\n", tmpbuf);
     display_message(msgbuf);
   }
 

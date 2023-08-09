@@ -262,26 +262,35 @@ static int searchwn(int ac, char *av[])
 
   dflag = fileinfoflag = offsetflag = wnsnsflag = 0;
 
+  // 遍历每一个参数，解析其含义，因为参数的顺序是随机的，所以二重循环
   for (i = 1; i < ac; i++)
   {
     if (!strcmp("-g", av[i]))
+      // 注释
       dflag++;
     else if (!strcmp("-h", av[i]))
+      // 帮助信息
       help++;
     else if (!strcmp("-l", av[i]))
       printlicense();
     else if (!strncmp("-n", av[i], 2) && strncmp("-nomn", av[i], 5))
-      whichsense = atoi(av[i] + 2);
+      // 只显示某个意思
+      whichsense = atoi(av[i] + 2); 
     else if (!strcmp("-a", av[i]))
+      // 显示文件信息
       fileinfoflag = 1;
     else if (!strcmp("-o", av[i]))
+      // 显示同义词
       offsetflag = 1;
     else if (!strcmp("-s", av[i]))
+      // 在同义词中显示序号
       wnsnsflag = 1;
   }
 
   /* Replace spaces with underscores before looking in database */
-
+  // 把单词中的空格替换为下划线，便于处理
+  // 所以支持词组
+  // 输入的方式是需要用到转义字符\\后面接空格
   strtolower(strsubst(av[1], ' ', '_'));
 
   /* Look at each option in turn.  If it's not a command line option
