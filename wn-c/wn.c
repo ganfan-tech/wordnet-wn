@@ -337,11 +337,12 @@ static int searchwn(int ac, char *av[])
 static int do_search(char *searchword, int pos, int search, int whichsense,
                      char *label)
 {
-  int totsenses = 0;
+  int total_senses = 0;
   char *morphword, *outbuf;
 
   outbuf = findtheinfo(searchword, pos, search, whichsense);
-  totsenses += wnresults.printcnt;
+  // 竟然直接读写全局变量，一锤子买卖
+  total_senses += wnresults.printcnt;
   if (strlen(outbuf) > 0)
     printf("\n%s of %s %s\n%s",
            label, partnames[pos], searchword, outbuf);
@@ -350,13 +351,13 @@ static int do_search(char *searchword, int pos, int search, int whichsense,
     do
     {
       outbuf = findtheinfo(morphword, pos, search, whichsense);
-      totsenses += wnresults.printcnt;
+      total_senses += wnresults.printcnt;
       if (strlen(outbuf) > 0)
         printf("\n%s of %s %s\n%s",
                label, partnames[pos], morphword, outbuf);
     } while (morphword = morphstr(NULL, pos));
 
-  return (totsenses);
+  return (total_senses);
 }
 
 static int do_is_defined(char *searchword)

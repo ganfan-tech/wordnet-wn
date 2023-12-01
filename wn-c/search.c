@@ -1485,15 +1485,21 @@ char *findtheinfo(char *searchstr, int dbase, int ptrtyp, int whichsense)
   /* Initializations -
      clear output buffer, search results structure, flags */
 
+  // #define SEARCHBUF ((long)(200 * (long)1024))
+  // static char searchbuffer[SEARCHBUF];
+  // 200k的搜索空间
   searchbuffer[0] = '\0';
 
+  // 初始化搜索结果
   wnresults.numforms = wnresults.printcnt = 0;
   wnresults.searchbuf = searchbuffer;
   wnresults.searchds = NULL;
 
   abortsearch = overflag = 0;
   for (i = 0; i < MAXSENSE; i++)
+  {
     offsets[i] = 0;
+  }
 
   switch (ptrtyp)
   {
